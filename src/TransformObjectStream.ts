@@ -107,6 +107,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
   private _readableState: {
     pipesCount: number
     pipes?: (any & { pipe: Function }) | any[]
+    reader?: ReadableStreamDefaultReader<O>
   }
 
   /** Register a custom type to be used when crawling an object tree. */
@@ -251,35 +252,32 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     this.on(event as any, listenOnce)
   }
 
+  unpipe () {
+    let src = this
+    let state = this._readableState
+
+    if (state.pipesCount === 0) return
+
+    const pipes: any[] = state.pipesCount === 1 ? [state.pipes] : state.pipes
+
+    for (const dest of pipes) {
+      dest.emit('unpipe', src, { hasUnpiped: false })
+    }
+  }
+
   /** Pipe to a NodeJS stream. Highly primitive support; will not manage data flow
-   *  and will always close the pipes. Options are not used in any way.
+   * and will always close the pipe. Options are not used in any way. Only one
+   * destination is supported; subsequent calls will throw an error and disrupt pipe.
    */
   pipe (destination: any & { pipe: Function }, options?: any) {
     let src = this
     let state = this._readableState
 
-    switch (state.pipesCount) {
-      case 0:
-        state.pipes = destination
-        break
-      case 1:
-        state.pipes = [state.pipes, destination]
-        break
-      default:
-        state.pipes.push(destination)
-        break
-    }
-
-    state.pipesCount += 1
+    state.pipes = destination
+    state.pipesCount = 1
 
     function unpipe () {
-      if (state.pipesCount === 0) return
-
-      const pipes: any[] = state.pipesCount === 1 ? [state.pipes] : state.pipes
-
-      for (const dest of pipes) {
-        dest.emit('unpipe', src, { hasUnpiped: false })
-      }
+      src.unpipe()
     }
 
     function onunpipe (readable: any, unpipeInfo: any) {
@@ -340,16 +338,21 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
 
     destination.emit('pipe', src)
 
-    const reader = this.readable.getReader()
-    const read = function read () {
-      reader.read().then(result => {
-        if (!result.done) {
-          read()
-        }
-      })
-    }
+    if (!state.reader) {
+      state.reader = this.readable.getReader()
 
-    read()
+      const read = function read () {
+        state.reader.read().then(result => {
+          if (!result.done) {
+            read()
+          }
+        })
+      }
+  
+      read()
+    } else {
+      throw new Error('Only one pipe permitted in implementation')
+    }
 
     return destination
   }
