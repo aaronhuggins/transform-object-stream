@@ -74,7 +74,12 @@
 				<p>Install it from the <a href="https://www.npmjs.com/package/transform-object-stream">npm repository</a>:</p>
 				<pre><code class="language-console">npm install --save transform-object-stream</code></pre>
 				<p>Then require it in your project:</p>
-				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TransformObjectStream } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;transform-object-stream&#x27;</span>)</code></pre>
+				<pre><code class="language-js"><span class="hljs-comment">// Simple example of convenience function. See tests and api for more advanced functionality.</span>
+<span class="hljs-keyword">const</span> { transformObjects } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;transform-object-stream&#x27;</span>)
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> transformObjects(objects, { <span class="hljs-attr">rootName</span>: <span class="hljs-string">&#x27;root&#x27;</span> })
+}</code></pre>
 				<p>Package also exports as ES Module with TS definitions for use with Deno and TypeScript.</p>
 				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
 					<h2>API</h2>

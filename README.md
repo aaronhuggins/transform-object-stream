@@ -13,7 +13,12 @@ npm install --save transform-object-stream
 Then require it in your project:
 
 ```js
-const { TransformObjectStream } = require('transform-object-stream')
+// Simple example of convenience function. See tests and api for more advanced functionality.
+const { transformObjects } = require('transform-object-stream')
+
+async function main () {
+  const results = await transformObjects(objects, { rootName: 'root' })
+}
 ```
 
 Package also exports as ES Module with TS definitions for use with Deno and TypeScript.
