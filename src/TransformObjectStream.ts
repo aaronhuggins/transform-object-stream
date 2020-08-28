@@ -340,8 +340,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
 
     destination.emit('pipe', src)
 
-    const [readable] = this.readable.tee()
-    const reader = readable.getReader()
+    const reader = this.readable.getReader()
     const read = function read () {
       reader.read().then(result => {
         if (!result.done) {
