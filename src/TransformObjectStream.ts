@@ -116,6 +116,8 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     const objectMap = this.fieldMapper.getObjectMap(name)
 
     for (const [key, value] of Object.entries(object || Object.create(null)) as Array<[string, any]>) {
+      if (this.skipProps.includes(key)) continue
+
       // If propertyName is undefined, fall back to current key
       const { propertyName = key } = objectMap.getFieldMap(key)
 
@@ -127,10 +129,10 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
       if (Array.isArray(entry)) {
         const mapFunc = function mapFunc (item: any, index: number): any {
           const leafType = typeOf(item)
-          const leaf = this.emitMutation(EVENTS.leaf, item, index, leafType)
+          const leaf = self.emitMutation(EVENTS.leaf, item, index, leafType)
 
           if (Array.isArray(leaf)) {
-            const branch = this.emitMutation(EVENTS.branch, leaf, leafType)
+            const branch = self.emitMutation(EVENTS.branch, leaf, leafType)
 
             return branch.map(mapFunc)
           }
