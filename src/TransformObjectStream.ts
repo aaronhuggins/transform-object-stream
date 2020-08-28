@@ -56,15 +56,15 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     let self: this
 
     super({
+      start() {},
       transform (chunk: I, controller: TransformStreamDefaultController<O>) {
-        if (isType(chunk, 'null')) {
-          controller.terminate()
-          self.emit(EVENTS.end)
-        } else {
-          const transformed = self.transform(chunk, options.rootName)
-          controller.enqueue(transformed)
-          self.emit(EVENTS.data, transformed)
-        }
+        const transformed = self.transform(chunk, options.rootName)
+
+        controller.enqueue(transformed)
+        self.emit(EVENTS.data, transformed)
+      },
+      flush () {
+        self.emit(EVENTS.end)
       }
     })
 
@@ -112,14 +112,12 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
 
   private transform (object: I, name: string): O {
     const self = this
-    const result = Object.create(null)
+    const result: any = {}
     const objectMap = this.fieldMapper.getObjectMap(name)
 
-    for (const [key, value] of Object.entries(object || Object.create(null)) as Array<[string, any]>) {
-      if (this.skipProps.includes(key)) continue
-
+    for (const [key, value] of Object.entries(object || {}) as Array<[string, any]>) {
       // If propertyName is undefined, fall back to current key
-      const { propertyName = key } = objectMap.getFieldMap(key)
+      const { propertyName = key } = objectMap.getFieldMap(key) || {}
 
       if (this.skipProps.includes(propertyName)) continue
 

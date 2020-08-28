@@ -7,11 +7,12 @@ export function transformIterable<I = any, O = any> (iterable: Iterable<I>, opti
   const output = input.pipeThrough(new TransformObjectStream<I, O>(options))
   const reader = output.getReader()
   const pump = async function * pump (): AsyncIterable<O> {
-    const result = await reader.read()
+    let result = await reader.read()
 
-    return {
-      ...result,
-      next: pump
+    while (!result.done) {
+      yield result.value
+
+      result = await reader.read()
     }
   }
 
