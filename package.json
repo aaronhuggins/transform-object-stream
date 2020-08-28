@@ -1,0 +1,42 @@
+{
+  "name": "transform-object-stream",
+  "version": "0.0.1",
+  "description": "A streaming transformer for objects.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "esm/index.js",
+  "exports": {
+    "import": "./esm/index.js",
+    "require": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "esm"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "scripts": {
+    "prepack": "gulp tsc",
+    "postpack": "gulp clean"
+  },
+  "author": "Aaron Huggins",
+  "license": "MIT",
+  "dependencies": {
+    "field-mapper": "^0.1.0",
+    "strong-typeof": "^0.1.0",
+    "web-streams-polyfill": "^3.0.0"
+  },
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^14.6.0",
+    "gulp": "^4.0.2",
+    "gulp-shell": "^0.8.0",
+    "mocha": "^8.1.2",
+    "source-map-support": "^0.5.19",
+    "ts-node": "^9.0.0",
+    "typedoc": "^0.18.0",
+    "typescript": "^4.0.2"
+  }
+}
