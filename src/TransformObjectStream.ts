@@ -32,10 +32,14 @@ export const EVENTS: {
 Object.freeze(EVENTS)
 Object.seal(EVENTS)
 
+/** @hidden */
+const fakeObjectMap = { getFieldMap: () => {} }
+
+export type OnFoldOutput = { __fold__: true, value: Record<string | number | symbol, any> } | { __fold__: false } | false
 export type OnObjectName = (name: string, type: string, value: any) => string
 export type OnBranch = (branch: any[], type: string) => any[]
 export type OnEntry = (value: any, key: string, type: string) => any
-export type OnFold = (object: any, key: string, type: string) => Record<string | number | symbol, any> | false
+export type OnFold = (object: any, key: string, type: string) => OnFoldOutput
 export type OnLeaf = (value: any, index: number, type: string) => any
 
 export interface TOSOptions {
@@ -113,7 +117,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
   private transform (object: I, name: string): O {
     const self = this
     const result: any = {}
-    const objectMap = this.fieldMapper.getObjectMap(name)
+    const objectMap = this.fieldMapper.getObjectMap(name) || fakeObjectMap
 
     for (const [key, value] of Object.entries(object || {}) as Array<[string, any]>) {
       // If propertyName is undefined, fall back to current key
@@ -154,8 +158,8 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
         const transformed = self.transform(entry, objectName)
         const fold = self.emitMutation(EVENTS.fold, transformed, propertyName, type)
 
-        if (fold) {
-          for (const [foldKey, foldValue] of Object.entries(fold)) {
+        if (fold && fold.__fold__) {
+          for (const [foldKey, foldValue] of Object.entries(fold.value)) {
             result[foldKey] = foldValue
           }
           continue
@@ -215,7 +219,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
   emitMutation (mutate: 'branch', branch: any[], type: string): any[]
   emitMutation (mutate: 'leaf', value: any, index: number, type: string): any
   emitMutation (mutate: 'entry', value: any, key: string, type: string): any
-  emitMutation (mutate: 'fold', object: any, key: string, type: string): Record<string | number | symbol, any> | false
+  emitMutation (mutate: 'fold', object: any, key: string, type: string): OnFoldOutput
   emitMutation (mutate: TransformObjectEvents, value: any, ...args: any[]): any {
     let result = value
 
@@ -335,6 +339,18 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     src.on(EVENTS.end, unpipe)
 
     destination.emit('pipe', src)
+
+    const [readable] = this.readable.tee()
+    const reader = readable.getReader()
+    const read = function read () {
+      reader.read().then(result => {
+        if (!result.done) {
+          read()
+        }
+      })
+    }
+
+    read()
 
     return destination
   }
