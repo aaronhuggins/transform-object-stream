@@ -128,6 +128,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="transformobjectstream.html#pipe" class="tsd-kind-icon">pipe</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="transformobjectstream.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="transformobjectstream.html#transform" class="tsd-kind-icon">transform</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="transformobjectstream.html#unpipe" class="tsd-kind-icon">unpipe</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external"><a href="transformobjectstream.html#registercustomtype" class="tsd-kind-icon">register<wbr>Custom<wbr>Type</a></li>
 							</ul>
 						</section>
@@ -147,7 +148,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides TransformStream.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L58">src/TransformObjectStream.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L58">src/TransformObjectStream.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -166,10 +167,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
 					<a name="_readablestate" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _readable<wbr>State</h3>
-					<div class="tsd-signature tsd-kind-icon">_readable<wbr>State<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>pipes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>pipesCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">_readable<wbr>State<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>pipes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>pipesCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>reader<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">ReadableStreamDefaultReader</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L107">src/TransformObjectStream.ts:107</a></li>
+							<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L107">src/TransformObjectStream.ts:107</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -181,6 +182,9 @@
 							<li class="tsd-parameter">
 								<h5>pipes<wbr>Count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
 							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> reader<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">ReadableStreamDefaultReader</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
 						</ul>
 					</div>
 				</section>
@@ -190,7 +194,7 @@
 					<div class="tsd-signature tsd-kind-icon">events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L104">src/TransformObjectStream.ts:104</a></li>
+							<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L104">src/TransformObjectStream.ts:104</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -200,7 +204,7 @@
 					<div class="tsd-signature tsd-kind-icon">field<wbr>Mapper<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">FieldMapper</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L105">src/TransformObjectStream.ts:105</a></li>
+							<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L105">src/TransformObjectStream.ts:105</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -221,7 +225,7 @@
 					<div class="tsd-signature tsd-kind-icon">skip<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L106">src/TransformObjectStream.ts:106</a></li>
+							<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L106">src/TransformObjectStream.ts:106</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -250,7 +254,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L208">src/TransformObjectStream.ts:208</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L209">src/TransformObjectStream.ts:209</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -264,7 +268,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L209">src/TransformObjectStream.ts:209</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L210">src/TransformObjectStream.ts:210</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -294,7 +298,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L218">src/TransformObjectStream.ts:218</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L219">src/TransformObjectStream.ts:219</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -317,7 +321,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L219">src/TransformObjectStream.ts:219</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L220">src/TransformObjectStream.ts:220</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -337,7 +341,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L220">src/TransformObjectStream.ts:220</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L221">src/TransformObjectStream.ts:221</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -360,7 +364,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L221">src/TransformObjectStream.ts:221</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L222">src/TransformObjectStream.ts:222</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -383,7 +387,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L222">src/TransformObjectStream.ts:222</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L223">src/TransformObjectStream.ts:223</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -421,7 +425,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L178">src/TransformObjectStream.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L179">src/TransformObjectStream.ts:179</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -438,7 +442,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L179">src/TransformObjectStream.ts:179</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L180">src/TransformObjectStream.ts:180</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -455,7 +459,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L180">src/TransformObjectStream.ts:180</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L181">src/TransformObjectStream.ts:181</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -472,7 +476,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L181">src/TransformObjectStream.ts:181</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L182">src/TransformObjectStream.ts:182</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -489,7 +493,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L182">src/TransformObjectStream.ts:182</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L183">src/TransformObjectStream.ts:183</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -506,7 +510,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L183">src/TransformObjectStream.ts:183</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L184">src/TransformObjectStream.ts:184</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -523,7 +527,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L184">src/TransformObjectStream.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L185">src/TransformObjectStream.ts:185</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -573,7 +577,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L237">src/TransformObjectStream.ts:237</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L238">src/TransformObjectStream.ts:238</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -590,7 +594,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L238">src/TransformObjectStream.ts:238</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L239">src/TransformObjectStream.ts:239</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -607,7 +611,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L239">src/TransformObjectStream.ts:239</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L240">src/TransformObjectStream.ts:240</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -624,7 +628,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L240">src/TransformObjectStream.ts:240</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L241">src/TransformObjectStream.ts:241</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -641,7 +645,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L241">src/TransformObjectStream.ts:241</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L242">src/TransformObjectStream.ts:242</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -658,7 +662,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L242">src/TransformObjectStream.ts:242</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L243">src/TransformObjectStream.ts:243</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -675,7 +679,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L243">src/TransformObjectStream.ts:243</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L244">src/TransformObjectStream.ts:244</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -719,13 +723,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L257">src/TransformObjectStream.ts:257</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L272">src/TransformObjectStream.ts:272</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Pipe to a NodeJS stream. Highly primitive support; will not manage data flow
-									and will always close the pipes. Options are not used in any way.</p>
+										and will always close the pipe. Options are not used in any way. Only one
+									destination is supported; subsequent calls will throw an error and disrupt pipe.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -757,7 +762,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L193">src/TransformObjectStream.ts:193</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L194">src/TransformObjectStream.ts:194</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -774,7 +779,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L194">src/TransformObjectStream.ts:194</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L195">src/TransformObjectStream.ts:195</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -791,7 +796,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L195">src/TransformObjectStream.ts:195</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L196">src/TransformObjectStream.ts:196</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -808,7 +813,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L196">src/TransformObjectStream.ts:196</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L197">src/TransformObjectStream.ts:197</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -825,7 +830,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L197">src/TransformObjectStream.ts:197</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L198">src/TransformObjectStream.ts:198</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -842,7 +847,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L198">src/TransformObjectStream.ts:198</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L199">src/TransformObjectStream.ts:199</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -859,7 +864,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L199">src/TransformObjectStream.ts:199</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L200">src/TransformObjectStream.ts:200</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -903,7 +908,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L117">src/TransformObjectStream.ts:117</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L118">src/TransformObjectStream.ts:118</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -919,6 +924,23 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="unpipe" class="tsd-anchor"></a>
+					<h3>unpipe</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">unpipe<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L255">src/TransformObjectStream.ts:255</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
 					<a name="registercustomtype" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> register<wbr>Custom<wbr>Type</h3>
@@ -929,7 +951,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/187aeb9/src/TransformObjectStream.ts#L113">src/TransformObjectStream.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/ahuggins-nhs/transform-object-stream/blob/0cd6c50/src/TransformObjectStream.ts#L114">src/TransformObjectStream.ts:114</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1038,6 +1060,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-external">
 								<a href="transformobjectstream.html#transform" class="tsd-kind-icon">transform</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="transformobjectstream.html#unpipe" class="tsd-kind-icon">unpipe</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
 								<a href="transformobjectstream.html#registercustomtype" class="tsd-kind-icon">register<wbr>Custom<wbr>Type</a>
