@@ -1,13 +1,17 @@
-import { FieldMapLike } from 'field-mapper'
+import { FieldMapLike, FieldMapper } from 'field-mapper'
 import { TransformObjectStream, OnFold, OnObjectName, transformObjects, readableStreamFrom } from '../src/index'
 import { CustomType, Type } from 'strong-typeof'
 import { strictEqual, deepStrictEqual, notStrictEqual } from 'assert'
+import { PassThrough } from 'stream'
 
 const skipProps = ['prop', 'type']
 
 const onFold: OnFold = function (object: any, key: string, type: string) {
   if (type === 'bark') {
-    return object
+    return {
+      __fold__: true,
+      value: object
+    }
   }
 
   return false
@@ -26,7 +30,7 @@ const fieldMaps: FieldMapLike<any>[] = [
   { fieldName: 'bark', propertyName: 'property4', objectName: 'dog' },
   { fieldName: 'woof', propertyName: 'property5', objectName: 'bark' },
   { fieldName: 'chews', propertyName: 'property6', objectName: 'cow' },
-  { fieldName: 'obj', propertyName: 'property7', objectName: 'root' }
+  { fieldName: 'child', propertyName: 'property7', objectName: 'root' }
 ]
 
 const testObject = {
@@ -52,7 +56,7 @@ const testObject = {
       }
     ]
   ],
-  obj: {
+  child: {
     type: 'cow',
     chews: 'grass'
   }
@@ -91,9 +95,10 @@ for (const [rootType, customType, typeCheck] of customTypes) {
   TransformObjectStream.registerCustomType(rootType, customType, typeCheck)
 }
 
+const objects = [testObject, testObject, testObject]
+
 describe('TransformObjectStream', () => {
   it ('should transform an object stream', async () => {
-    const objects = [testObject, testObject, testObject]
     const results = Array.from(await transformObjects(objects, {
       rootName: 'root',
       skipProps,
@@ -117,5 +122,26 @@ describe('TransformObjectStream', () => {
     notStrictEqual(results[0], resultObject)
     notStrictEqual(results[1], resultObject)
     notStrictEqual(results[2], resultObject)
+  })
+
+  it('should pipe output to nodejs stream', async () => {
+    const rs = readableStreamFrom(objects)
+    const ts = new TransformObjectStream({ rootName: 'root', fieldMapper: new FieldMapper(fieldMaps) })
+    const ps = new PassThrough({ objectMode: true })
+    
+    ts.pipe(ps)
+    rs.pipeThrough(ts)
+
+    const results = await new Promise<any[]>((resolve, reject) => {
+      const chunks: any[] = []
+
+      ps.on('data', (chunk: any) => {
+        chunks.push(chunk)
+      })
+      ps.on('end', () => resolve(chunks))
+      ps.on('error', (error: any) => reject(error))
+    })
+
+    strictEqual(results.length, objects.length)
   })
 })
