@@ -1,7 +1,7 @@
 import { FieldMapLike, FieldMapper } from 'field-mapper'
 import { TransformObjectStream, OnFold, OnObjectName, transformObjects, readableStreamFrom } from '../src/index'
 import { CustomType, Type } from 'strong-typeof'
-import { strictEqual, deepStrictEqual, notStrictEqual } from 'assert'
+import { strictEqual, deepStrictEqual, notStrictEqual, throws, doesNotThrow } from 'assert'
 import { PassThrough } from 'stream'
 
 const skipProps = ['prop', 'type']
@@ -128,9 +128,18 @@ describe('TransformObjectStream', () => {
     const rs = readableStreamFrom(objects)
     const ts = new TransformObjectStream({ rootName: 'root', fieldMapper: new FieldMapper(fieldMaps) })
     const ps = new PassThrough({ objectMode: true })
-    
+
     ts.pipe(ps)
     rs.pipeThrough(ts)
+    ts.once('data', (chunk: any) => {
+      strictEqual(typeof chunk, 'object')
+    })
+
+    throws(() => {
+      const ps2 = new PassThrough({ objectMode: true })
+
+      ts.pipe(ps2)
+    })
 
     const results = await new Promise<any[]>((resolve, reject) => {
       const chunks: any[] = []
@@ -143,5 +152,45 @@ describe('TransformObjectStream', () => {
     })
 
     strictEqual(results.length, objects.length)
+  })
+
+  it('should attempt transform with no field map', async () => {
+    const results = Array.from(await transformObjects(objects, {
+      rootName: 'root',
+      onBranch (branch: any[], type: string) {
+        return branch
+      },
+      onEntry (value: any, key: string, type: string) {
+        return value
+      },
+      onLeaf (value: any, index: number, type: string) {
+        return value
+      }
+    }))
+
+    strictEqual(results.length, objects.length)
+  })
+
+  it('should cover remaining scenarios', () => {
+    const ts = new TransformObjectStream({ rootName: 'root' })
+    const ts2 = new TransformObjectStream({ rootName: 'root' })
+    const ps = new PassThrough({ objectMode: true })
+    const ps2 = new PassThrough({ objectMode: true })
+
+    doesNotThrow(() => {
+      ts.unpipe()
+    })
+
+    ts.pipe(ps)
+
+    doesNotThrow(() => {
+      ps.emit('error')
+    })
+
+    ts2.pipe(ps2)
+
+    doesNotThrow(() => {
+      ps2.emit('close')
+    })
   })
 })
