@@ -1,6 +1,6 @@
 import { TransformStream } from 'web-streams-polyfill/ponyfill/es2018'
 import { FieldMapper, FieldMapLike } from 'field-mapper'
-import { typeOf, isType } from 'strong-typeof'
+import { typeOf, isType, addCustomType, Type } from 'strong-typeof'
 
 export type TransformObjectEvents = 'object_name' | 'branch' | 'leaf' | 'entry' | 'fold' | 'end' | 'data'
 
@@ -13,12 +13,19 @@ export const EVENTS: {
   end: 'end'
   data: 'data'
 } = {
+  /** Object naming event. Occurs before passing a child/leaf object to be transformed. */
   object_name: 'object_name',
+  /** Array visitied in the object tree. Occurs for every array visited in the object tree and branches. */
   branch: 'branch',
+  /** Value visited on a branch. Occurs for each item in an array and before passing a leaf object to be transformed. */
   leaf: 'leaf',
+  /** Entry visited on an object. Occurs after the property name has been looked up but before any other event. */
   entry: 'entry',
+  /** Object folding event. Occurs after passing a child object to be transformed, if the child is not a leaf. */
   fold: 'fold',
+  /** Signals to NodeJS Stream that the stream has ended. */
   end: 'end',
+  /** Signals to NodeJS Stream that there is a chunk of data. */
   data: 'data'
 }
 
@@ -43,6 +50,7 @@ export interface TOSOptions {
   onObjectName?: OnObjectName
 }
 
+/** Class for transforming objects from one kind to another. */
 export class TransformObjectStream<I = any, O = any> extends TransformStream<I, O> {
   constructor (options: TOSOptions) {
     let self: this
@@ -97,7 +105,12 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     pipes?: (any & { pipe: Function }) | any[]
   }
 
-  transform (object: I, name: string): O {
+  /** Register a custom type to be used when crawling an object tree. */
+  static registerCustomType<T = string, P = any> (rootType: Type, customType: T, typeCheck: (value: P) => T) {
+    addCustomType(rootType, customType, typeCheck)
+  }
+
+  private transform (object: I, name: string): O {
     const self = this
     const result = Object.create(null)
     const objectMap = this.fieldMapper.getObjectMap(name)
@@ -109,37 +122,37 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
       if (this.skipProps.includes(propertyName)) continue
 
       const type = typeOf(value)
-      const entry = this.emitValue(EVENTS.entry, value, key, type)
+      const entry = this.emitMutation(EVENTS.entry, value, key, type)
 
       if (Array.isArray(entry)) {
         const mapFunc = function mapFunc (item: any, index: number): any {
           const leafType = typeOf(item)
-          const leaf = this.emitValue(EVENTS.leaf, item, index, leafType)
+          const leaf = this.emitMutation(EVENTS.leaf, item, index, leafType)
 
           if (Array.isArray(leaf)) {
-            const branch = this.emitValue(EVENTS.branch, leaf, leafType)
+            const branch = this.emitMutation(EVENTS.branch, leaf, leafType)
 
             return branch.map(mapFunc)
           }
 
           if (typeof leaf === 'object') {
-            const objectName = self.emitValue(EVENTS.object_name, name, leafType, leaf)
+            const objectName = self.emitMutation(EVENTS.object_name, name, leafType, leaf)
 
             return self.transform(leaf, objectName)
           }
 
           return leaf
         }
-        const branch = this.emitValue(EVENTS.branch, entry, type)
+        const branch = this.emitMutation(EVENTS.branch, entry, type)
 
         result[propertyName] = branch.map(mapFunc)
         continue
       }
 
       if (typeof entry === 'object') {
-        const objectName = self.emitValue(EVENTS.object_name, name, type, entry)
+        const objectName = self.emitMutation(EVENTS.object_name, name, type, entry)
         const transformed = self.transform(entry, objectName)
-        const fold = self.emitValue(EVENTS.fold, transformed, propertyName, type)
+        const fold = self.emitMutation(EVENTS.fold, transformed, propertyName, type)
 
         if (fold) {
           for (const [foldKey, foldValue] of Object.entries(fold)) {
@@ -189,7 +202,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
   }
 
   emit (event: 'end'): void
-  emit(event: 'data', chunk: O): void
+  emit (event: 'data', chunk: O): void
   emit (event: TransformObjectEvents, ...args: any[]): void {
     if (typeof this.events[event] === 'object') {
       for (const listener of this.events[event]) {
@@ -198,17 +211,19 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     }
   }
 
-  emitValue (mutate: 'object_name', name: string, type: string, item: any): string
-  emitValue (mutate: 'branch', branch: any[], type: string): any[]
-  emitValue (mutate: 'leaf', value: any, index: number, type: string): any
-  emitValue (mutate: 'entry', value: any, key: string, type: string): any
-  emitValue (mutate: 'fold', object: any, key: string, type: string): Record<string | number | symbol, any> | false
-  emitValue (mutate: TransformObjectEvents, value: any, ...args: any[]): any {
+  emitMutation (mutate: 'object_name', name: string, type: string, item: any): string
+  emitMutation (mutate: 'branch', branch: any[], type: string): any[]
+  emitMutation (mutate: 'leaf', value: any, index: number, type: string): any
+  emitMutation (mutate: 'entry', value: any, key: string, type: string): any
+  emitMutation (mutate: 'fold', object: any, key: string, type: string): Record<string | number | symbol, any> | false
+  emitMutation (mutate: TransformObjectEvents, value: any, ...args: any[]): any {
     let result = value
 
     if (typeof this.events[mutate] === 'object') {
       for (const listener of this.events[mutate]) {
-        result = listener.call(this, result, ...args)
+        const mutation = listener.call(this, result, ...args)
+
+        if (!isType(mutation, 'null', 'undefined')) result = mutation
       }
     }
 
@@ -235,7 +250,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
   /** Pipe to a NodeJS stream. Highly primitive support; will not manage data flow
    *  and will always close the pipes. Options are not used in any way.
    */
-  pipe (destination: any & { pipe: Function }, options: any) {
+  pipe (destination: any & { pipe: Function }, options?: any) {
     let src = this
     let state = this._readableState
 

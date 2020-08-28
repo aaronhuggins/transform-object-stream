@@ -2,14 +2,11 @@ import { readableStreamFrom } from './readableStreamFrom'
 import { TransformObjectStream, TOSOptions } from './TransformObjectStream'
 
 /** Promisify object transformation into an async iterable. */
-export function transformIterable <I = any, O = any> (
-  iterable: Iterable<I>,
-  options: TOSOptions
-): AsyncIterable<O> {
+export function transformIterable<I = any, O = any> (iterable: Iterable<I>, options: TOSOptions): AsyncIterable<O> {
   const input = readableStreamFrom(iterable)
   const output = input.pipeThrough(new TransformObjectStream<I, O>(options))
   const reader = output.getReader()
-  const pump = async function *pump (): AsyncIterable<O> {
+  const pump = async function * pump (): AsyncIterable<O> {
     const result = await reader.read()
 
     return {
