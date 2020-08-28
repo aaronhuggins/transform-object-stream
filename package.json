@@ -1,6 +1,6 @@
 {
   "name": "transform-object-stream",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A streaming transformer for objects.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,6 +21,10 @@
     "postpack": "gulp clean"
   },
   "author": "Aaron Huggins",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ahuggins-nhs/transform-object-stream.git"
+  },
   "license": "MIT",
   "dependencies": {
     "field-mapper": "^0.1.0",
