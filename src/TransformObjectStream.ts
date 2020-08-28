@@ -71,7 +71,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
   private skipProps: string[]
   private _readableState: {
     pipesCount: number
-    pipes?: any & { pipe: Function } | any[]
+    pipes?: (any & { pipe: Function }) | any[]
   }
 
   transform (object: I, name: string): O {
@@ -131,7 +131,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
 
       result[propertyName] = entry
     }
-  
+
     return result
   }
 
@@ -211,7 +211,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
   pipe (destination: any & { pipe: Function }, options: any) {
     let src = this
     let state = this._readableState
-  
+
     switch (state.pipesCount) {
       case 0:
         state.pipes = destination
@@ -235,7 +235,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
         dest.emit('unpipe', src, { hasUnpiped: false })
       }
     }
-  
+
     function onunpipe (readable: any, unpipeInfo: any) {
       if (readable === src) {
         if (unpipeInfo && unpipeInfo.hasUnpiped === false) {
@@ -246,13 +246,13 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     }
 
     destination.on('unpipe', onunpipe)
-  
+
     function onend () {
       destination.end()
     }
 
     src.on('end', onend)
-  
+
     function cleanup () {
       destination.removeListener('close', onclose)
       destination.removeListener('finish', onfinish)
@@ -262,7 +262,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
       src.removeListener('end', unpipe)
       src.removeListener('data', ondata)
     }
-  
+
     function ondata (chunk: any) {
       destination.write(chunk)
     }
