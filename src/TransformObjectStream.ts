@@ -90,6 +90,8 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
       this.skipProps = []
     }
 
+    this.options = { ...options }
+
     if (typeof options.onBranch === 'function') this.on(EVENTS.branch, options.onBranch)
     if (typeof options.onEntry === 'function') this.on(EVENTS.entry, options.onEntry)
     if (typeof options.onFold === 'function') this.on(EVENTS.fold, options.onFold)
@@ -103,6 +105,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
 
   private events: Record<string, Function[]>
   private fieldMapper: FieldMapper<any>
+  private options: TOSOptions
   private skipProps: string[]
   private _readableState: {
     pipesCount: number
