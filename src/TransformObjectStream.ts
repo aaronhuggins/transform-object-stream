@@ -96,7 +96,14 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     if (typeof options.onEntry === 'function') this.on(EVENTS.entry, options.onEntry)
     if (typeof options.onFold === 'function') this.on(EVENTS.fold, options.onFold)
     if (typeof options.onLeaf === 'function') this.on(EVENTS.leaf, options.onLeaf)
-    if (typeof options.onObjectName === 'function') this.on(EVENTS.object_name, options.onObjectName)
+    if (typeof options.onObjectName === 'function') {
+      this.on(EVENTS.object_name, options.onObjectName)
+    } else {
+      // By default, return the root name or type string for the object name.
+      this.on(EVENTS.object_name, (name: string, type: string, value: any) => {
+        return this.defaultOnObjectName(name, type, value)
+      })
+    }
 
     this._readableState = {
       pipesCount: 0
@@ -239,6 +246,10 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
 
       return leaf
     }
+  }
+
+  private defaultOnObjectName (name: string, type: string, value: any): string {
+    return name === this.options.rootName ? name : type
   }
 
   on (mutate: 'object_name', mutator: OnObjectName): void
