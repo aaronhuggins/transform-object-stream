@@ -154,7 +154,7 @@ describe('TransformObjectStream', () => {
 
   it('should pipe output to nodejs stream', async () => {
     const rs = readableStreamFrom(objects)
-    const ts = new TransformObjectStream({ rootName: 'root', fieldMapper: new FieldMapper(fieldMaps), onObjectName })
+    const ts = new TransformObjectStream({ rootName: 'root', fieldMapper: new FieldMapper(fieldMaps) })
     const ps = new PassThrough({ objectMode: true })
 
     ts.pipe(ps)
