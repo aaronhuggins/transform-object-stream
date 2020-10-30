@@ -119,39 +119,28 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     const self = this
     const result: any = {}
     const objectMap = this.fieldMapper.getObjectMap(name) || fakeObjectMap
-
-    for (const [key, value] of Object.entries(object || {}) as Array<[string, any]>) {
-      // If propertyName is undefined, fall back to current key
-      const { propertyName = key } = objectMap.getFieldMap(key) || {}
-
-      if (this.skipProps.includes(propertyName)) continue
+    const transformer = (fieldName: string, propertyName: string, value: any) => {
+      if (typeof propertyName === 'undefined' || this.skipProps.includes(propertyName)) return
 
       const type = typeOf(value)
-      const entry = this.emitMutation(EVENTS.entry, value, key, type)
+      const entry = this.emitMutation(EVENTS.entry, value, fieldName, type)
+      const isPath = propertyName.includes('.')
+      const setPathValue = (value: any) => {
+        if (isPath) {
+          self.pathHandler(result, propertyName, value)
+        }
+
+        return isPath
+      }
 
       if (Array.isArray(entry)) {
-        const mapFunc = function mapFunc (item: any, index: number): any {
-          const leafType = typeOf(item)
-          const leaf = self.emitMutation(EVENTS.leaf, item, index, leafType)
-
-          if (Array.isArray(leaf)) {
-            const branch = self.emitMutation(EVENTS.branch, leaf, leafType)
-
-            return branch.map(mapFunc)
-          }
-
-          if (typeof leaf === 'object') {
-            const objectName = self.emitMutation(EVENTS.object_name, name, leafType, leaf)
-
-            return self.transform(leaf, objectName)
-          }
-
-          return leaf
-        }
         const branch = this.emitMutation(EVENTS.branch, entry, type)
+        const transformed = branch.map(self.getMapFunction(name))
 
-        result[propertyName] = branch.map(mapFunc)
-        continue
+        if (setPathValue(transformed)) return
+
+        result[propertyName] = transformed
+        return
       }
 
       if (typeof entry === 'object') {
@@ -163,17 +152,90 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
           for (const [foldKey, foldValue] of Object.entries(fold.value)) {
             result[foldKey] = foldValue
           }
-          continue
+          return
         }
 
+        if (setPathValue(transformed)) return
+
         result[propertyName] = transformed
-        continue
+        return
       }
+
+      if (setPathValue(entry)) return
 
       result[propertyName] = entry
     }
 
+    for (const fieldPath of this.fieldMapper.getFieldPaths(name)) {
+      const { propertyName } = objectMap.getFieldMap(fieldPath) || {}
+      const value = this.pathHandler(object, fieldPath)
+
+      transformer(fieldPath, propertyName, value)
+    }
+
+    for (const [fieldName, value] of Object.entries(object || {}) as Array<[string, any]>) {
+      // If propertyName is undefined, fall back to current key
+      const { propertyName } = objectMap.getFieldMap(fieldName) || {}
+
+      transformer(fieldName, propertyName, value)
+    }
+
     return result
+  }
+
+  private pathHandler (input: Record<string | number, any>, path: string | string[]): any
+  private pathHandler (input: Record<string | number, any>, path: string | string[], value: any): void
+  private pathHandler (input: Record<string | number, any>, path: string | string[], value?: any): any {
+    if (typeof path === 'undefined') return input
+
+    const properties = typeof path === 'string' ? path.split('.') : [].concat(path)
+    const lastPlace = properties.length - 1
+    const setValue = typeof value !== 'undefined'
+    let visitor: any = input
+
+    for (let i = 0; i < properties.length; i += 1) {
+      if (i === lastPlace) {
+        if (setValue) {
+          visitor[properties[i]] = value
+
+          // Return void for setter
+          return
+        }
+
+        // Return final property for getter
+        if (typeof visitor !== 'undefined' && visitor !== null) return visitor[properties[i]]
+      }
+
+      if (setValue && typeof visitor[properties[i]] === 'undefined' && i < lastPlace) {
+        visitor[properties[i]] = {}
+      }
+
+      if (typeof visitor !== 'undefined' && visitor !== null) visitor = visitor[properties[i]]
+    }
+  }
+
+  private getMapFunction (name: string): (item: any, index: number) => any {
+    const self = this
+
+    return function mapFunc (item: any, index: number): any {
+      const leafType = typeOf(item)
+      const leaf = self.emitMutation(EVENTS.leaf, item, index, leafType)
+
+      if (Array.isArray(leaf)) {
+        const branch = self.emitMutation(EVENTS.branch, leaf, leafType)
+
+        return branch.map(self.getMapFunction(name))
+      }
+
+      if (typeof leaf === 'object') {
+
+        const objectName = self.emitMutation(EVENTS.object_name, name, leafType, leaf)
+
+        return self.transform(leaf, objectName)
+      }
+
+      return leaf
+    }
   }
 
   on (mutate: 'object_name', mutator: OnObjectName): void

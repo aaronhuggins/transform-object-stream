@@ -18,19 +18,24 @@ const onFold: OnFold = function (object: any, key: string, type: string) {
 }
 
 const onObjectName: OnObjectName = function (name: string, type: string, value: any) {
-  if (['duck', 'dog', 'bark', 'cow'].includes(type)) return type
+  if (['duck', 'dog', 'bark', 'cow', 'chicken'].includes(type)) return type
 
-  return name
+  return name === 'root' ? name : type
 }
 
 const fieldMaps: FieldMapLike<any>[] = [
+  { fieldName: 'a', propertyName: 'a', objectName: 'object' },
   { fieldName: 'another', propertyName: 'property1', objectName: 'root' },
   { fieldName: 'array', propertyName: 'property2', objectName: 'root' },
   { fieldName: 'message', propertyName: 'property3', objectName: 'duck' },
   { fieldName: 'bark', propertyName: 'property4', objectName: 'dog' },
   { fieldName: 'woof', propertyName: 'property5', objectName: 'bark' },
   { fieldName: 'chews', propertyName: 'property6', objectName: 'cow' },
-  { fieldName: 'child', propertyName: 'property7', objectName: 'root' }
+  { fieldName: 'child', propertyName: 'property7', objectName: 'root' },
+  { fieldName: 'child.type', propertyName: 'property8', objectName: 'root' },
+  { fieldName: 'flap.like', propertyName: 'property9.property10.property11', objectName: 'chicken' },
+  { fieldName: 'flap.like.b', propertyName: 'property9.property10.property12', objectName: 'chicken' },
+  { fieldName: 'flap.like.c', propertyName: 'property9.property13', objectName: 'chicken' }
 ]
 
 const testObject = {
@@ -52,6 +57,16 @@ const testObject = {
         bark: {
           prop: 'skip me, too',
           woof: 'bow wow'
+        }
+      },
+      {
+        type: 'chicken',
+        flap: {
+          like: {
+            a: 'hen',
+            b: ['rooster'],
+            c: 'chick'
+          }
         }
       }
     ]
@@ -76,19 +91,32 @@ const resultObject = {
       ],
       {
         property5: 'bow wow'
+      },
+      {
+        property9: {
+          property10: {
+            property11: {
+              a: 'hen'
+            },
+            property12: ['rooster']
+          },
+          property13: 'chick'
+        }
       }
     ]
   ],
   property7: {
     property6: 'grass'
-  }
+  },
+  property8: 'cow'
 }
 
 const customTypes: Array<[Type, CustomType<any>, (val: any) => CustomType<any>]> = [
   ['object', 'duck', (value: any) => value.type === 'duck' ? 'duck' : undefined],
   ['object', 'dog', (value: any) => value.type === 'dog' ? 'dog' : undefined],
   ['object', 'bark', (value: any) => value.woof === 'bow wow' ? 'bark' : undefined],
-  ['object', 'cow', (value: any) => value.type === 'cow' ? 'cow' : undefined]
+  ['object', 'cow', (value: any) => value.type === 'cow' ? 'cow' : undefined],
+  ['object', 'chicken', (value:any) => value.type === 'chicken' ? 'chicken' : undefined]
 ]
 
 for (const [rootType, customType, typeCheck] of customTypes) {
@@ -126,7 +154,7 @@ describe('TransformObjectStream', () => {
 
   it('should pipe output to nodejs stream', async () => {
     const rs = readableStreamFrom(objects)
-    const ts = new TransformObjectStream({ rootName: 'root', fieldMapper: new FieldMapper(fieldMaps) })
+    const ts = new TransformObjectStream({ rootName: 'root', fieldMapper: new FieldMapper(fieldMaps), onObjectName })
     const ps = new PassThrough({ objectMode: true })
 
     ts.pipe(ps)
@@ -165,7 +193,8 @@ describe('TransformObjectStream', () => {
       },
       onLeaf (value: any, index: number, type: string) {
         return value
-      }
+      },
+      onObjectName
     }))
 
     strictEqual(results.length, objects.length)
@@ -176,6 +205,12 @@ describe('TransformObjectStream', () => {
     const ts2 = new TransformObjectStream({ rootName: 'root' })
     const ps = new PassThrough({ objectMode: true })
     const ps2 = new PassThrough({ objectMode: true })
+    const paths = ts as any
+
+    doesNotThrow(() => {
+      paths.pathHandler(undefined, undefined)
+      paths.pathHandler(undefined, ['one', 'two'])
+    })
 
     doesNotThrow(() => {
       ts.unpipe()
