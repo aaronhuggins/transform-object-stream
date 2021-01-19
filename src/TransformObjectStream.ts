@@ -45,7 +45,7 @@ export type OnLeaf = (value: any, index: number, type: string) => any
 export interface TOSOptions {
   rootName: string
   fieldMaps?: FieldMapLike<any>[]
-  fieldMapper?: FieldMapper<any>
+  fieldMapper?: FieldMapper
   skipProps?: string[]
   onBranch?: OnBranch
   onEntry?: OnEntry
@@ -111,7 +111,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
   }
 
   private events: Record<string, Function[]>
-  private fieldMapper: FieldMapper<any>
+  private fieldMapper: FieldMapper
   private options: TOSOptions
   private skipProps: string[]
   private _readableState: {

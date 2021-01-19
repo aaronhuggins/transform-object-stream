@@ -1,6 +1,6 @@
 {
   "name": "transform-object-stream",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A streaming transformer for objects.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,20 +27,20 @@
   },
   "license": "MIT",
   "dependencies": {
-    "field-mapper": "^1.0.0",
+    "field-mapper": "^1.1.0",
     "strong-typeof": "^0.1.1",
-    "web-streams-polyfill": "^3.0.0"
+    "web-streams-polyfill": "^3.0.1"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
-    "@types/mocha": "^8.0.3",
-    "@types/node": "^14.14.6",
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^14.14.21",
     "gulp": "^4.0.2",
     "gulp-shell": "^0.8.0",
-    "mocha": "^8.2.0",
+    "mocha": "^8.2.1",
     "source-map-support": "^0.5.19",
-    "ts-node": "^9.0.0",
-    "typedoc": "^0.19.2",
-    "typescript": "^4.0.5"
+    "ts-node": "^9.1.1",
+    "typedoc": "^0.20.16",
+    "typescript": "^4.1.3"
   }
 }
