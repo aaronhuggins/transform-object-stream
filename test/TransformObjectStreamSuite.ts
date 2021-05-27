@@ -35,7 +35,8 @@ const fieldMaps: FieldMapLike<any>[] = [
   { fieldName: 'child.type', propertyName: 'property8', objectName: 'root' },
   { fieldName: 'flap.like', propertyName: 'property9.property10.property11', objectName: 'chicken' },
   { fieldName: 'flap.like.b', propertyName: 'property9.property10.property12', objectName: 'chicken' },
-  { fieldName: 'flap.like.c', propertyName: 'property9.property13', objectName: 'chicken' }
+  { fieldName: 'flap.like.c', propertyName: 'property9.property13', objectName: 'chicken' },
+  { fieldName: 'child.maturity', propertyName: 'property14', objectName: 'root' }
 ]
 
 const testObject = {
@@ -73,7 +74,8 @@ const testObject = {
   ],
   child: {
     type: 'cow',
-    chews: 'grass'
+    chews: 'grass',
+    maturity: null as any
   }
 }
 
@@ -108,7 +110,8 @@ const resultObject = {
   property7: {
     property6: 'grass'
   },
-  property8: 'cow'
+  property8: 'cow',
+  property14: null as any
 }
 
 const customTypes: Array<[Type, CustomType<any>, (val: any) => CustomType<any>]> = [
@@ -136,7 +139,7 @@ describe('TransformObjectStream', () => {
     }))
 
     strictEqual(results.length, objects.length)
-
+console.log(results)
     // This indicates that each passed object is the same pointer in memory
     strictEqual(objects[0], objects[1])
     // This indicates that each result is a distinct copy in memory

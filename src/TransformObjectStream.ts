@@ -153,7 +153,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
         return
       }
 
-      if (typeof entry === 'object') {
+      if (typeof entry === 'object' && entry !== null) {
         const objectName = self.emitMutation(EVENTS.object_name, name, type, entry)
         const transformed = self.transform(entry, objectName)
         const fold = self.emitMutation(EVENTS.fold, transformed, propertyName, type)
@@ -415,6 +415,7 @@ export class TransformObjectStream<I = any, O = any> extends TransformStream<I, 
     destination.emit('pipe', src)
 
     if (!state.reader) {
+      // @ts-ignore Weird type incompatibility that is inconsequential to actual code compilation.
       state.reader = this.readable.getReader()
 
       const read = function read () {
